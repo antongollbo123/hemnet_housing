@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import pandas as pd
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException
 
 options = webdriver.ChromeOptions()
 options.add_argument('--ignore-certificate-errors')
@@ -37,9 +38,6 @@ def attribute_extractor(text):
         value_dev_bool = 0
     else:
         value_dev_bool = 1
-
-    print(text_list)
-
     if (len(text_list) < 9):
         if (len(text_list) == 7):
             text_list.insert(4, "null")
@@ -80,7 +78,7 @@ def hemnet_scraping(url, num_entries, counter):
             WebDriverWait(driver, 15).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@class="hcl-button hcl-button--primary"]'))).click()
 
-        except(org.openqa.selenium.StaleElementReferenceException):
+        except(StaleElementReferenceException):
             WebDriverWait(driver, 15).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@class="hcl-button hcl-button--primary"]'))).click()
 
@@ -99,13 +97,10 @@ def hemnet_scraping(url, num_entries, counter):
 
         for i in range(0, len(elements)):
             big_housing_dict[i + adding_number] = attribute_extractor(elements[i].text)
-            variable = elements[i].text
 
-        # Identify next page element and scroll down to it
         try:
-            next_page = driver.find_element_by_xpath(
-                '//*[@class="next_page hcl-button hcl-button--primary hcl-button--full-width"]')
-            # driver.execute_script("arguments[0].scrollIntoView();", next_page)
+            #Find 'next page' button
+            next_page = driver.find_element_by_xpath('//*[@class="next_page hcl-button hcl-button--primary hcl-button--full-width"]')
             time.sleep(1)
             # Change page
             next_page.click()
@@ -127,4 +122,4 @@ for area in area_list:
         housing_info_df = housing_info_df.append(new_housing_info_df, ignore_index=True)
         counter = counter + 1
 
-housing_info_df.to_csv("stockholm_housing_df.csv",index=False)
+housing_info_df.to_csv("stockholm_housing_df_RAW.csv",index=False)
