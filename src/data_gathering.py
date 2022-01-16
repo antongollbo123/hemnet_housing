@@ -1,4 +1,3 @@
-#Imports
 from selenium import webdriver
 import time
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,16 +19,17 @@ sodermalm_url = "https://www.hemnet.se/salda/bostader?location_ids%5B%5D=898472"
 solna_url = "https://www.hemnet.se/salda/bostader?location_ids%5B%5D=18028"
 norrmalm_url = "https://www.hemnet.se/salda/bostader?location_ids%5B%5D=925969"
 
-area_list = [vasastan_url, kungsholmen_url, ostermalm_url, sodermalm_url, solna_url, norrmalm_url]
+url_list = [vasastan_url, kungsholmen_url, ostermalm_url, sodermalm_url, solna_url, norrmalm_url]
+area_list = ["vasastan", "kungsholmen", "ostermalm", "sodermalm", "solna", "norrmalm"]
 
-path = r"/chromedriver.exe"
+path = r"C:/Users/Anton/Documents/Anton_Gollbo/Skolarbete/projects/Hemnet_Housing/chromedriver.exe"
 driver = webdriver.Chrome(executable_path=path, options=options)
 
 
 def attribute_extractor(text):
     text = text.lower()
     labels = ["adress", "location", "size:rooms", "fee", "features", "sale_price", "sold_date", "value_dev", "ppsqm"]
-    accommodation_features = []
+    accomodation_features = []
 
     value_dev_bool = -1
     text_list = text.split("\n")
@@ -38,31 +38,32 @@ def attribute_extractor(text):
         value_dev_bool = 0
     else:
         value_dev_bool = 1
+
     if (len(text_list) < 9):
         if (len(text_list) == 7):
             text_list.insert(4, "null")
             text_list.insert(7, "null")
-            accommodation_features = text_list
+            accomodation_features = text_list
         if ((len(text_list) == 8) & (value_dev_bool == 1)):
             text_list.insert(4, "null")
-            accommodation_features = text_list
+            accomodation_features = text_list
         elif ((len(text_list) == 8) & (value_dev_bool == 0)):
             text_list.insert(7, "null")
-            accommodation_features = text_list
+            accomodation_features = text_list
     elif (len(text_list) == 9):
         if (value_dev_bool == 1):
-            accommodation_features = text_list
+            accomodation_features = text_list
         elif (value_dev_bool == 0):
             text_list[4] = "balkong&hiss"
             text_list.pop(5)
-            accommodation_features = text_list
+            accomodation_features = text_list
 
     elif (len(text_list) > 9):
         text_list[4] = "balkong&hiss"
         text_list.pop(5)
-        accommodation_features = text_list
+        accomodation_features = text_list
 
-    housing_info_dict = dict(zip(labels, accommodation_features))
+    housing_info_dict = dict(zip(labels, accomodation_features))
     return housing_info_dict
 
 
@@ -97,10 +98,13 @@ def hemnet_scraping(url, num_entries, counter):
 
         for i in range(0, len(elements)):
             big_housing_dict[i + adding_number] = attribute_extractor(elements[i].text)
+            variable = elements[i].text
 
+        # Identify next page element and scroll down to it
         try:
-            #Find 'next page' button
-            next_page = driver.find_element_by_xpath('//*[@class="next_page hcl-button hcl-button--primary hcl-button--full-width"]')
+            next_page = driver.find_element_by_xpath(
+                '//*[@class="next_page hcl-button hcl-button--primary hcl-button--full-width"]')
+            # driver.execute_script("arguments[0].scrollIntoView();", next_page)
             time.sleep(1)
             # Change page
             next_page.click()
@@ -109,17 +113,16 @@ def hemnet_scraping(url, num_entries, counter):
             return big_housing_dict
 
     return big_housing_dict
-
-
 counter = 0
-for area in area_list:
+for area in url_list:
     housing_info_dict = hemnet_scraping(area, 2500, counter)
     if (counter == 0):
         housing_info_df = pd.DataFrame(housing_info_dict).T
+        housing_info_df["district"] = area_list[counter]
         counter = counter + 1
     elif (counter > 0):
         new_housing_info_df = pd.DataFrame(housing_info_dict).T
+        new_housing_info_df["district"] = area_list[counter]
         housing_info_df = housing_info_df.append(new_housing_info_df, ignore_index=True)
         counter = counter + 1
-
-housing_info_df.to_csv("stockholm_housing_df_RAW.csv",index=False)
+housing_info_df.to_csv("stockholm_housing_df_RAW.csv", index=False)
