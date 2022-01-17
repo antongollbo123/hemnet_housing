@@ -1,7 +1,7 @@
 # Hemnet_Housing
 The goal of this project is to do the following:
 
-(1) Scrape Hemnet for final sale prices from 6 areas in Stockholm city. The goal is also to scrape additional features, such as square meters, rooms etc. 
+(1) Scrape Hemnet for interesting features and price values from 6 areas in Stockholm city. The goal is also to scrape additional features, such as square meters, rooms etc. 
 
 (2) 
 a. Clean the data that was scraped in (1).
