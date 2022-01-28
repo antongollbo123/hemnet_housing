@@ -1,7 +1,13 @@
-# Hemnet_Housing
+# hemnet_housing
+
+## Background
+Choosing where to live and spend your days can be a difficult thing. With housing prices rising, it is tough for a new venturer into the housing market to decide how much to commit and when. This leads us into this project. Moving to Stockholm has been in my consideration for quite some time, but not knowing the specific areas makes searching for apartments quite difficult. In this project, I wanted to narrow down Stockholm inner city to 6 popular areas and model a regression model to see how the different areas and features can affect the price of apartments in the different areas.  
+
+## Method
+
 The goal of this project is to do the following:
 
-(1) Scrape Hemnet for interesting features and price values from 6 areas in Stockholm city. The goal is also to scrape additional features, such as square meters, rooms etc. 
+(1) Scrape Swedish housing market website "Hemnet" for interesting features and price values from 6 areas in Stockholm city. The goal is also to scrape additional features, such as square meters, rooms etc. 
 
 (2) 
 a. Clean the data that was scraped in (1).
@@ -12,4 +18,4 @@ c. Create a local database (through SQLLite) and insert the cleaned data with ad
 
 (3) When the data has been cleaned and additional data has been added through the Yelp API, EDA begins
 
-(4) After EDA is done, regression modelling is done to see if the price of a location can be somewhat correctly predicted with regression models
+(4) After EDA is done, regression modelling is done to see if the price of a location can be somewhat correctly predicted with regression models. The second goal is also to see what featur
