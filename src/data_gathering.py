@@ -10,7 +10,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 options = webdriver.ChromeOptions()
 options.add_argument('--ignore-certificate-errors')
 options.add_argument('--incognito')
-# options.add_argument('--headless')
+options.add_argument('--headless')
 
 vasastan_url = "https://www.hemnet.se/salda/bostader?location_ids%5B%5D=925970"
 kungsholmen_url = "https://www.hemnet.se/salda/bostader?location_ids%5B%5D=925968"
@@ -114,8 +114,9 @@ def hemnet_scraping(url, num_entries, counter):
 
     return big_housing_dict
 counter = 0
+
 for area in url_list:
-    housing_info_dict = hemnet_scraping(area, 2500, counter)
+    housing_info_dict = hemnet_scraping(area, 100, counter)
     if (counter == 0):
         housing_info_df = pd.DataFrame(housing_info_dict).T
         housing_info_df["district"] = area_list[counter]
@@ -125,4 +126,6 @@ for area in url_list:
         new_housing_info_df["district"] = area_list[counter]
         housing_info_df = housing_info_df.append(new_housing_info_df, ignore_index=True)
         counter = counter + 1
-housing_info_df.to_csv("stockholm_housing_df_RAW.csv", index=False)
+
+
+housing_info_df.to_csv("stockholm_housing_df_RAW2.csv", index=False)
