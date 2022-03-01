@@ -17,7 +17,7 @@ b. Use the cleaned data to insert into Yelp API. The purpose of this is to "tran
 
 c. Create a local database (through SQLLite) and insert the cleaned data with additional information from Yelp
 #### Exploratory Data Analysis
-(3) Extract specific data through SQL queries and import them into a notebook environment. Perform exploratory data analysis to find patterns and insights from the different areas and features of the specified aparatments. 
+(3) Extract specific data through SQL queries and import them into a notebook environment. Perform exploratory data analysis to find patterns and insights from the different areas and features of the specified apartments. 
 #### Regression modelling
 
 (4) After EDA is done, regression modelling is done to see if the price of a location can be somewhat correctly predicted with regression models. The second goal is also to see what featur
